@@ -16,7 +16,7 @@ drop out of the live feed.
 
 ## Requirements
 
-- Home Assistant 2024.1 or newer.
+- Home Assistant 2024.8 or newer.
 - A Live Tennis API key. The **free tier** (1000 requests/day, 30 requests/min)
   covers everything this integration uses — get one at
   <https://livetennisapi.com/subscribe/free>.
@@ -60,7 +60,7 @@ integration's **Configure** button.
 
 | Entity | State | Notes |
 | --- | --- | --- |
-| `sensor.live_tennis_live_matches` | count of live matches | attributes: `match_ids`, `tournaments` |
+| `sensor.live_matches` | count of live matches | attributes: `match_ids`, `tournaments` |
 | `sensor.tennis_<p1>_vs_<p2>` | compact score | one per live match when enabled |
 
 Per-match sensor attributes include: `player_1`/`player_2`, `tournament`,

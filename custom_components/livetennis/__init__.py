@@ -23,7 +23,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     tours: list[str] = list(options.get(CONF_TOURS, []))
     scan_interval: int = int(options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL))
 
-    coordinator = LiveTennisDataUpdateCoordinator(hass, client, tours, scan_interval)
+    coordinator = LiveTennisDataUpdateCoordinator(
+        hass, entry, client, tours, scan_interval
+    )
     await coordinator.async_config_entry_first_refresh()
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator

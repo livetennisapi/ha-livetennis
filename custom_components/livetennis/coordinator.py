@@ -6,6 +6,7 @@ from datetime import timedelta
 import logging
 from typing import Any
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -27,6 +28,7 @@ class LiveTennisDataUpdateCoordinator(DataUpdateCoordinator[dict[int, dict[str, 
     def __init__(
         self,
         hass: HomeAssistant,
+        config_entry: ConfigEntry,
         client: LiveTennisApiClient,
         tours: list[str],
         scan_interval: int,
@@ -34,6 +36,7 @@ class LiveTennisDataUpdateCoordinator(DataUpdateCoordinator[dict[int, dict[str, 
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name=DOMAIN,
             update_interval=timedelta(seconds=scan_interval),
         )
