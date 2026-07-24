@@ -36,6 +36,7 @@ from .const import (
     DOMAIN,
     MAX_SCAN_INTERVAL,
     MIN_SCAN_INTERVAL,
+    SIGNUP_URL,
     TOURS,
 )
 
@@ -118,7 +119,12 @@ class LiveTennisConfigFlow(ConfigFlow, domain=DOMAIN):
             }
         )
         return self.async_show_form(
-            step_id="user", data_schema=schema, errors=errors
+            step_id="user",
+            data_schema=schema,
+            errors=errors,
+            # hassfest forbids literal URLs in translated strings; the signup link
+            # is supplied as a placeholder so the copy stays translatable.
+            description_placeholders={"signup_url": SIGNUP_URL}
         )
 
     @staticmethod
