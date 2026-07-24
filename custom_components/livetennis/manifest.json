@@ -1,0 +1,12 @@
+{
+  "domain": "livetennis",
+  "name": "Live Tennis",
+  "codeowners": ["@bensynapse"],
+  "config_flow": true,
+  "documentation": "https://github.com/bensynapse/ha-livetennis",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/bensynapse/ha-livetennis/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

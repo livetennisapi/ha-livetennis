@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# Virtualenvs / tooling
+.venv/
+venv/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Local verification artifacts (may contain live data; never commit)
+/scratch/
+*.local.json
+
+# Secrets — never commit an API key
+.env
+secrets*

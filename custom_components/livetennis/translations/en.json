@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Live Tennis",
+        "description": "Enter your Live Tennis API key. A free key (1000 requests/day) is available at https://livetennisapi.com/subscribe/free",
+        "data": {
+          "api_key": "API key",
+          "tours": "Tours to track (leave empty for all)",
+          "scan_interval": "Update interval (seconds)",
+          "per_match_sensors": "Create a sensor per live match"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid API key. Check the key and try again.",
+      "cannot_connect": "Could not reach the Live Tennis API. Check your connection and try again.",
+      "rate_limited": "Rate limit reached (30 requests/minute on the free tier). Wait a minute and try again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Live Tennis options",
+        "data": {
+          "tours": "Tours to track (leave empty for all)",
+          "scan_interval": "Update interval (seconds)",
+          "per_match_sensors": "Create a sensor per live match"
+        }
+      }
+    }
+  },
+  "selector": {
+    "tours": {
+      "options": {
+        "atp": "ATP",
+        "wta": "WTA",
+        "challenger": "Challenger",
+        "itf": "ITF",
+        "juniors": "Juniors"
+      }
+    }
+  }
+}
