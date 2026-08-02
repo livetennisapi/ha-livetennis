@@ -5,10 +5,10 @@
     "@bensynapse"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/bensynapse/ha-livetennis",
+  "documentation": "https://github.com/livetennisapi/ha-livetennis",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/bensynapse/ha-livetennis/issues",
+  "issue_tracker": "https://github.com/livetennisapi/ha-livetennis/issues",
   "requirements": [],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
