@@ -122,6 +122,10 @@ standalone against live JSON.
 Not affiliated with the ATP, WTA, ITF, or any tournament. Data is provided by
 the Live Tennis API under its own terms.
 
+## Affiliate program
+
+Know developers who need tennis data? The [affiliate program](https://affiliates.livetennisapi.com/program) pays 51% recurring commission for the life of every referred subscription — 30-day cookie, and the people you refer get 10% off.
+
 ## License
 
 [MIT](LICENSE)
