@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Live Tennis",
-        "description": "Enter your Live Tennis API key. A free key (1000 requests/day) is available at {signup_url}",
+        "description": "Enter your Live Tennis API key. A free key (100 requests/day) is available at {signup_url}",
         "data": {
           "api_key": "API key",
           "tours": "Tours to track (leave empty for all)",

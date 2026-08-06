@@ -21,19 +21,23 @@ TOURS: tuple[str, ...] = ("atp", "wta", "challenger", "itf", "juniors")
 
 # Polling.
 # A cycle issues one request per selected tour (or a single request when no
-# tour filter is set). The free tier allows 30 requests/minute AND 1,000
+# tour filter is set). The free tier allows 30 requests/minute AND 100
 # requests/day — the *daily* cap is the binding one:
-#   86400 s / 120 s = 720 cycles/day
-#   0-1 tours -> 720/day   (fits the free tier at the 120 s default)
-#   2 tours   -> 1,440/day (needs >= 180 s: 960/day)
-#   3 tours   -> 2,160/day (needs >= 300 s: 864/day)
-#   4 tours   -> 2,880/day (needs >= 360 s: 960/day)
-#   5 tours   -> 3,600/day (needs >= 450 s: 960/day)
-# The default stays 120 s because it is correct for the common setups (no
-# filter, or one tour); the README documents per-tour intervals for the rest.
-DEFAULT_SCAN_INTERVAL = 120
+#   86400 s / 900 s = 96 cycles/day
+#   0-1 tours -> 96/day  (fits the free tier at the 900 s default)
+#   2 tours   -> 192/day (needs >= 1800 s: 96/day)
+#   3 tours   -> 288/day (needs >= 2700 s: 96/day)
+#   4 tours   -> 384/day (needs >= 3600 s: 96/day)
+#   5 tours   -> 480/day (does NOT fit free even at the 3600 s max: 120/day —
+#                needs the Basic tier)
+# The default is 900 s so the common setups (no filter, or one tour) fit the
+# free tier's 100/day with the interval left alone; the README documents
+# per-tour intervals for the rest. Faster polling (e.g. the old 120 s default,
+# 720/day) needs the Basic tier (1,000/day).
+DEFAULT_SCAN_INTERVAL = 900
 # Floor chosen for the per-minute limit (5 per-tour requests / 60 s = 5
-# req/min, well within 30). NOTE: on a free key, 60 s already exceeds the
-# daily cap even with a single tour (1,440/day) — see the README quota table.
+# req/min, well within 30). NOTE: on a free key, 60 s wildly exceeds the
+# 100/day cap even with a single tour (1,440/day); even Basic (1,000/day)
+# needs >= 90 s for one tour — see the README quota table.
 MIN_SCAN_INTERVAL = 60
 MAX_SCAN_INTERVAL = 3600

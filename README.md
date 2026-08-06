@@ -17,10 +17,10 @@ drop out of the live feed.
 ## Requirements
 
 - Home Assistant 2024.8 or newer.
-- A Live Tennis API key. The **free tier** (30 requests/min, 1,000 requests/day,
+- A Live Tennis API key. The **free tier** (30 requests/min, 100 requests/day,
   no card required) is enough at the default settings — get one at
   <https://livetennisapi.com/subscribe/free>. If you select more than one tour,
-  raise the update interval as described in
+  raise the update interval (or upgrade to Basic) as described in
   [A note on your quota](#a-note-on-your-quota).
 
 ## Installation (HACS custom repository)
@@ -48,10 +48,11 @@ Copy `custom_components/livetennis/` into your Home Assistant
 3. Enter your API key and choose:
    - **Tours to track** — leave empty for all tours, or pick a subset. Each
      selected tour is one API request per update cycle.
-   - **Update interval** — default 120 s (minimum 60 s, maximum 3600 s). The
+   - **Update interval** — default 900 s (minimum 60 s, maximum 3600 s). The
      default is fine for the per-minute limit with any tour selection, but on
      the free tier the **daily** limit is the one that matters once you select
-     multiple tours — see [A note on your quota](#a-note-on-your-quota).
+     multiple tours or lower the interval — see
+     [A note on your quota](#a-note-on-your-quota).
    - **Create a sensor per live match** — on by default.
 
 An invalid key is reported immediately (the key is validated with a live call).
@@ -61,26 +62,30 @@ integration's **Configure** button.
 
 ### A note on your quota
 
-A free key allows 30 requests/minute and **1,000 requests/day**. Each update
+A free key allows 30 requests/minute and **100 requests/day**. Each update
 cycle costs **one request per selected tour** — or a single request when no
 tours are selected (one unfiltered call covers everything). At the default
-120 s interval that is `86400 / 120 = 720` cycles/day, so the daily cost scales
+900 s interval that is `86400 / 900 = 96` cycles/day, so the daily cost scales
 with the number of tours you pick:
 
-| Tours selected | Requests/cycle | Requests/day @ 120 s | Free tier (1,000/day) | Recommended interval |
+| Tours selected | Requests/cycle | Requests/day @ 900 s | Free tier (100/day) | Recommended interval |
 | --- | --- | --- | --- | --- |
-| none (all tours) | 1 | 720 | ✅ fits | 120 s (default) |
-| 1 | 1 | 720 | ✅ fits | 120 s (default) |
-| 2 | 2 | 1,440 | ❌ over | 180 s → 960/day |
-| 3 | 3 | 2,160 | ❌ over | 300 s → 864/day |
-| 4 | 4 | 2,880 | ❌ over | 360 s → 960/day |
-| 5 | 5 | 3,600 | ❌ over | 450 s → 960/day |
+| none (all tours) | 1 | 96 | ✅ fits | 900 s (default) |
+| 1 | 1 | 96 | ✅ fits | 900 s (default) |
+| 2 | 2 | 192 | ❌ over | 1800 s → 96/day |
+| 3 | 3 | 288 | ❌ over | 2700 s → 96/day |
+| 4 | 4 | 384 | ❌ over | 3600 s → 96/day |
+| 5 | 5 | 480 | ❌ over | doesn't fit free — even the 3600 s maximum is 120/day. Use Basic. |
 
-The default stays at 120 s because it is correct for the most common setups
-(no tour filter, or a single tour). The per-minute limit is never the
-constraint: even 5 requests per cycle at the 60 s minimum interval is
-5 requests/minute, far below 30 — but note that at 60 s even a single tour
-costs 1,440 requests/day, so don't lower the interval on a free key.
+The 900 s default fits the free tier for the most common setups (no tour
+filter, or a single tour) with almost no headroom — 96 of 100 requests/day —
+so don't lower the interval on a free key: even at 900 s a second tour puts
+you over, and at the 60 s minimum a single tour costs 1,440 requests/day. If
+you want faster updates (or several tours at a reasonable interval), the
+**Basic** tier ($9.99, 1,000 requests/day) sustains one tour at ~90 s, or all
+five tours at 450 s (960/day). The per-minute limit is never the constraint:
+even 5 requests per cycle at the 60 s minimum is 5 requests/minute, far
+below 30.
 
 ## Entities
 
