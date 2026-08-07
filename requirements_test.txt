@@ -1,0 +1,2 @@
+# Test harness: brings in homeassistant, pytest, and the custom-component fixtures.
+pytest-homeassistant-custom-component

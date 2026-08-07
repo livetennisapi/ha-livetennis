@@ -1,8 +1,12 @@
 # Live Tennis for Home Assistant
 
 A [HACS](https://hacs.xyz)-installable custom integration that surfaces **live
-tennis scores** (ATP / WTA / Challenger / ITF / Juniors) in Home Assistant,
+tennis scores** across ATP, WTA, Challenger, ITF and juniors in Home Assistant,
 powered by the [Live Tennis API](https://livetennisapi.com).
+
+[![Validate](https://github.com/livetennisapi/ha-livetennis/actions/workflows/validate.yml/badge.svg)](https://github.com/livetennisapi/ha-livetennis/actions/workflows/validate.yml)
+[![CI](https://github.com/livetennisapi/ha-livetennis/actions/workflows/ci.yml/badge.svg)](https://github.com/livetennisapi/ha-livetennis/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 It creates:
 
@@ -55,10 +59,30 @@ Copy `custom_components/livetennis/` into your Home Assistant
      [A note on your quota](#a-note-on-your-quota).
    - **Create a sensor per live match** — on by default.
 
-An invalid key is reported immediately (the key is validated with a live call).
+An invalid key is reported immediately (the key is validated with a live call —
+keys look like `twjp_...`). The integration authenticates with the `X-API-Key`
+header; the API also accepts `Authorization: Bearer <key>` for your own
+scripts and REST sensors.
 
 You can change tours, the interval, and the per-match toggle later via the
-integration's **Configure** button.
+integration's **Configure** button. If your key is later revoked or replaced,
+Home Assistant prompts you to **re-authenticate** with a new key — no need to
+delete and re-add the integration.
+
+### API usage and tiers
+
+The integration only calls `GET /matches?status=live`, which is available on
+**every** tier including FREE. Current quota grid:
+
+| Tier | Requests/min | Requests/day | Price |
+| --- | --- | --- | --- |
+| FREE | 30 | 100 | $0 |
+| BASIC | 60 | 1,000 | $9.99/mo |
+| PRO | 300 | 10,000 | $29.99/mo |
+| ULTRA | 600 | 500,000 | $99.99/mo |
+
+On a free key, keep the update interval at 900 s or slower; for an always-on
+dashboard (faster updates or several tours), **Basic is recommended**.
 
 ### A note on your quota
 
@@ -86,6 +110,17 @@ you want faster updates (or several tours at a reasonable interval), the
 five tours at 450 s (960/day). The per-minute limit is never the constraint:
 even 5 requests per cycle at the 60 s minimum is 5 requests/minute, far
 below 30.
+
+### What happens when you hit a limit
+
+- An ordinary **429** (minute or day window) is treated as a transient failure;
+  polling simply continues on the next cycle.
+- A **429 `abuse_throttled`** response means the API has temporarily blocked the
+  key for chronically exceeding its quota (typically for 24 hours — usually a
+  broken retry loop in *some* client using the same key). The integration stops
+  polling until the block lifts (`retry_at_epoch`), logs a warning, and raises a
+  **repair issue** in Settings → Repairs. Polling and the repair reset
+  automatically once the API serves data again.
 
 ## Entities
 
@@ -130,6 +165,13 @@ the Live Tennis API under its own terms.
 ## Affiliate program
 
 Know developers who need tennis data? The [affiliate program](https://affiliates.livetennisapi.com/program) pays 51% recurring commission for the life of every referred subscription — 30-day cookie, and the people you refer get 10% off.
+
+## Links
+
+- API documentation: <https://docs.livetennisapi.com>
+- Free API key: <https://livetennisapi.com/subscribe/free>
+- Discord: <https://discord.gg/f8WUZHgDm6>
+- GitHub org: <https://github.com/livetennisapi>
 
 ## License
 
