@@ -32,6 +32,24 @@ class LiveTennisRateLimitError(LiveTennisApiError):
         self.retry_after = retry_after
 
 
+class LiveTennisAbuseThrottledError(LiveTennisRateLimitError):
+    """Raised on 429 ``abuse_throttled`` - the key is blocked (typically 24 h).
+
+    The API applies this to chronically over-quota clients (e.g. a broken retry
+    loop). ``retry_at_epoch`` is the Unix timestamp when requests are accepted
+    again; callers must not retry before it.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        retry_at_epoch: int | None = None,
+        retry_after: int | None = None,
+    ) -> None:
+        super().__init__(message, retry_after=retry_after)
+        self.retry_at_epoch = retry_at_epoch
+
+
 class LiveTennisApiClient:
     """Minimal read-only client covering the FREE-tier endpoints we need."""
 
@@ -64,6 +82,14 @@ class LiveTennisApiClient:
                     raise LiveTennisAuthError("Invalid or disabled API key (401)")
                 if resp.status == 429:
                     retry_after = _parse_retry_after(resp.headers.get("Retry-After"))
+                    body = await _json_or_none(resp)
+                    if isinstance(body, dict) and body.get("error") == "abuse_throttled":
+                        retry_at = body.get("retry_at_epoch")
+                        raise LiveTennisAbuseThrottledError(
+                            "API key is abuse-throttled (429 abuse_throttled)",
+                            retry_at_epoch=retry_at if isinstance(retry_at, int) else None,
+                            retry_after=retry_after,
+                        )
                     raise LiveTennisRateLimitError(
                         "Rate limit exceeded (429)", retry_after=retry_after
                     )
@@ -116,6 +142,14 @@ class LiveTennisApiClient:
                 if isinstance(match_id, int):
                     merged[match_id] = match
         return list(merged.values())
+
+
+async def _json_or_none(resp: aiohttp.ClientResponse) -> Any:
+    """Best-effort JSON body; None when the body is absent or not JSON."""
+    try:
+        return await resp.json(content_type=None)
+    except (aiohttp.ClientError, ValueError):
+        return None
 
 
 def _parse_retry_after(value: str | None) -> int | None:

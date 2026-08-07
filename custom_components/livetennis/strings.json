@@ -10,12 +10,28 @@
           "scan_interval": "Update interval (seconds)",
           "per_match_sensors": "Create a sensor per live match"
         }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate Live Tennis",
+        "description": "Your Live Tennis API key no longer works. Enter a valid key. You can re-reveal or replace your key at {account_url}",
+        "data": {
+          "api_key": "API key"
+        }
       }
     },
     "error": {
       "invalid_auth": "Invalid API key. Check the key and try again.",
       "cannot_connect": "Could not reach the Live Tennis API. Check your connection and try again.",
       "rate_limited": "Rate limit reached (30 requests/minute on the free tier). Wait a minute and try again."
+    },
+    "abort": {
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+  "issues": {
+    "abuse_throttled": {
+      "title": "Live Tennis API key temporarily blocked",
+      "description": "The Live Tennis API has abuse-throttled your API key because it chronically exceeded its quota — usually a broken retry loop in some client using the same key. This integration has paused polling until {retry_at} and will resume automatically. Check every consumer of this key, and make sure the update interval fits your plan's daily quota."
     }
   },
   "options": {

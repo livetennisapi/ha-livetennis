@@ -4,9 +4,10 @@ from __future__ import annotations
 
 DOMAIN = "livetennis"
 
-# Shown in the config flow as a description placeholder: hassfest rejects
+# Shown in the config flow as description placeholders: hassfest rejects
 # literal URLs inside translated strings.
 SIGNUP_URL = "https://livetennisapi.com/subscribe/free"
+ACCOUNT_URL = "https://livetennisapi.com/account"
 
 # Config / options keys
 CONF_API_KEY = "api_key"

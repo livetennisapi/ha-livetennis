@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 import voluptuous as vol
@@ -30,6 +31,7 @@ from homeassistant.helpers.selector import (
 
 from .api import LiveTennisApiClient, LiveTennisAuthError, LiveTennisRateLimitError
 from .const import (
+    ACCOUNT_URL,
     CONF_PER_MATCH_SENSORS,
     CONF_TOURS,
     DEFAULT_SCAN_INTERVAL,
@@ -125,6 +127,45 @@ class LiveTennisConfigFlow(ConfigFlow, domain=DOMAIN):
             # hassfest forbids literal URLs in translated strings; the signup link
             # is supplied as a placeholder so the copy stays translatable.
             description_placeholders={"signup_url": SIGNUP_URL}
+        )
+
+    async def async_step_reauth(
+        self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
+        """Start a reauth flow (e.g. after the API key was revoked)."""
+        self._reauth_entry = self.hass.config_entries.async_get_entry(
+            self.context["entry_id"]
+        )
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask for (and validate) a replacement API key."""
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            api_key = user_input[CONF_API_KEY].strip()
+            error = await _validate_key(self.hass, api_key)
+            if error:
+                errors["base"] = error
+            else:
+                return self.async_update_reload_and_abort(
+                    self._reauth_entry, data={CONF_API_KEY: api_key}
+                )
+
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_API_KEY): TextSelector(
+                    TextSelectorConfig(type=TextSelectorType.PASSWORD)
+                ),
+            }
+        )
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=schema,
+            errors=errors,
+            description_placeholders={"account_url": ACCOUNT_URL},
         )
 
     @staticmethod
