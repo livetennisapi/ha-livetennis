@@ -2,7 +2,7 @@
   "domain": "livetennis",
   "name": "Live Tennis",
   "codeowners": [
-    "@bensynapse"
+    "@livetennisapi"
   ],
   "config_flow": true,
   "documentation": "https://github.com/livetennisapi/ha-livetennis",
