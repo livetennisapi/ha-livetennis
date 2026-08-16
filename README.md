@@ -36,10 +36,6 @@ drop out of the live feed.
 4. Find **Live Tennis** in the list, click **Download**, and restart Home
    Assistant.
 
-> HACS requires the repository to have a description, topics, and at least one
-> published GitHub release/tag. Maintainers: tag a release (e.g. `v1.0.0`)
-> before submitting.
-
 ## Manual installation
 
 Copy `custom_components/livetennis/` into your Home Assistant
